@@ -1,7 +1,7 @@
 module Odyssey
+  # An engine does basic text analysis, then hands that data to formulas.
   class Engine
 
-    #instance variables
     @formula
     @score
     @score_by_sentence
@@ -12,22 +12,28 @@ module Odyssey
     @syllables_by_sentence
     @data
 
-    #regex
-    LETTER_REGEX = /[A-z]/
-    WORD_REGEX = /[^\W][A-z\-']*/
+    LETTER_REGEX = /[A-z]/          # How letters are split
+    WORD_REGEX   = /[^\W][A-z\-']*/ # How words are split
+
+    # How sentences are split
     SENTENCE_REGEX = /[^\.!?\s][^\.!?]*(?:[\.!?](?!['"]?\s|$)[^\.!?]*)*[\.!?]?['"]?(?=\s|$)/
 
-    #words that cause the syllable analyzer to fail
-    # word => syllables
+    # Words that cause the syllable analyzer to fail
     PROBLEM_WORDS = {
-      'ion'    => 2
+      'ion' => 2
     }
 
+    # Create a new engine.
+    #
+    # @param formula_name [String]
+    #
     def initialize(formula_name)
       reset
       update_formula(formula_name)
     end
 
+    # Use a different formula.
+    #
     def update_formula(formula_name)
       klass = Module.const_get formula_name
       @formula = klass.new
